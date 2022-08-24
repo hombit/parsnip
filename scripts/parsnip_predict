@@ -24,6 +24,7 @@ if __name__ == '__main__':
     parser.add_argument('--augments', default=0, type=int)
 
     parser.add_argument('--device', default='cuda')
+    parser.add_argument('--data_parallelism', action='store_true')
     parser.add_argument('--threads', default=8, type=int)
 
     args = vars(parser.parse_args())
@@ -40,6 +41,7 @@ if __name__ == '__main__':
     model = parsnip.load_model(
         args['model_path'],
         device=args['device'],
+        data_parallelism=args['data_parallelism'],
         threads=args['threads'],
     )
 

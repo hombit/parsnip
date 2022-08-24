@@ -5,6 +5,7 @@ import sys
 
 import parsnip
 import time
+import torch.nn
 
 
 if __name__ == '__main__':
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--bands', default=None)
 
     parser.add_argument('--device', default='cuda')
+    parser.add_argument('--data_parallelism', action='store_true')
     parser.add_argument('--threads', default=8, type=int)
 
     # Parse the arguments
@@ -56,6 +58,9 @@ if __name__ == '__main__':
         settings=args,
         ignore_unknown_settings=True
     )
+    if args['data_parallelism']:
+        # docs recommend to use this class for training
+        model = pytorch.nn.DistributedDataParallel(model)
 
     dataset = model.preprocess(dataset)
 
