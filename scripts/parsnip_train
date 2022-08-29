@@ -58,10 +58,11 @@ if __name__ == '__main__':
         settings=args,
         ignore_unknown_settings=True
     )
-    if args['data_parallelism']:
-        model = torch.nn.DataParallel(model)
 
     dataset = model.preprocess(dataset)
+
+    if args['data_parallelism']:
+        model = torch.nn.DataParallel(model)
 
     if args['split_train_test']:
         train_dataset, test_dataset = parsnip.split_train_test(dataset)
