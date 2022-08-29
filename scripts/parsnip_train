@@ -59,8 +59,7 @@ if __name__ == '__main__':
         ignore_unknown_settings=True
     )
     if args['data_parallelism']:
-        # docs recommend to use this class for training
-        model = torch.nn.parallel.DistributedDataParallel(model)
+        model = torch.nn.DataParallel(model)
 
     dataset = model.preprocess(dataset)
 
