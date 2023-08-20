@@ -1814,7 +1814,7 @@ class ParsnipModel(nn.Module):
         return redshifts[np.argmax(redshift_distribution)]
 
 
-def load_model(path=None, device='cpu', threads=8):
+def load_model(path=None, device='cpu', data_parallelism=False, threads=8):
     """Load a ParSNIP model.
 
     Parameters
@@ -1824,6 +1824,8 @@ def load_model(path=None, device='cpu', threads=8):
         default_model specified in settings.py is loaded.
     device : str, optional
         Torch device to load the model to, by default 'cpu'
+    data_parallelism : bool, optional
+        Enable Torch data parallelism for multiple GPUs usage
     threads : int, optional
         Number of threads to use, by default 8
 
@@ -1851,6 +1853,8 @@ def load_model(path=None, device='cpu', threads=8):
 
     # Instantiate the model
     model = ParsnipModel(path, settings['bands'], use_device, threads, settings)
+    if data_parallelism:
+        model = nn.DataParallel(model)
     model.load_state_dict(state_dict)
 
     return model

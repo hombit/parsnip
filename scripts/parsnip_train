@@ -5,6 +5,7 @@ import sys
 
 import parsnip
 import time
+import torch.nn
 
 
 if __name__ == '__main__':
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--bands', default=None)
 
     parser.add_argument('--device', default='cuda')
+    parser.add_argument('--data_parallelism', action='store_true')
     parser.add_argument('--threads', default=8, type=int)
 
     # Parse the arguments
@@ -58,6 +60,9 @@ if __name__ == '__main__':
     )
 
     dataset = model.preprocess(dataset)
+
+    if args['data_parallelism']:
+        model = torch.nn.DataParallel(model)
 
     if args['split_train_test']:
         train_dataset, test_dataset = parsnip.split_train_test(dataset)
